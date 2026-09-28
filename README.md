@@ -32,7 +32,7 @@ python testes.py    # testes dos 4 métodos
 
 | | Parte 1 — Métodos de intervalo | Parte 2 — Métodos abertos | Parte 3 — Interface e saída |
 |---|---|---|---|
-| **Quem** | _a definir_ | _a definir_ | Giovanni Éber |
+| **Quem** | Caio Benevides | _a definir_ | Giovanni Éber |
 | **Código** | Bissecção, Falsa Posição | Newton-Raphson, Secante | Menu, entrada, tabela, gráficos |
 | **Falhas tratadas** | Sem mudança de sinal, divisão por zero | Derivada nula, divisão por zero, saída do intervalo | Entrada inválida |
 | **Relatório** | Por que sempre convergem, mas são lentos | Por que são rápidos, mas podem falhar | Como executar, gráficos, relevância do circuito RC |

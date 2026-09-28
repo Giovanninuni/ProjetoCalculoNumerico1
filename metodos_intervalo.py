@@ -1,5 +1,6 @@
 """
 PARTE 1 — Métodos de intervalo: Bissecção e Falsa Posição.
+Autor: Caio Benevides
 
 Os dois partem de um intervalo [a, b] onde f(a) e f(b) têm sinais
 opostos (Teorema de Bolzano) e vão encolhendo esse intervalo até
@@ -16,40 +17,117 @@ from resultado import Resultado
 
 
 def bisseccao(f: Callable[[float], float], a: float, b: float,
-              eps: float, max_iter: int) -> Resultado:
+              eps: float = 1e-6, max_iter: int = 100) -> Resultado:
     """
     Encontra uma raiz de f em [a, b] pelo método da Bissecção.
-
-    Passos:
-      1. Verificar se f(a) * f(b) < 0. Se não, devolver Resultado com
-         erro="Não há mudança de sinal em [a, b]".
-      2. Marcar o tempo inicial com time.perf_counter().
-      3. Repetir até max_iter vezes:
-           - x = (a + b) / 2
-           - guardar x em historico
-           - se o critério de parada for atingido, parar
-           - se f(a) * f(x) < 0, a raiz está em [a, x]  ->  b = x
-             senão, a raiz está em [x, b]               ->  a = x
-      4. Calcular tempo_ms = (fim - inicio) * 1000.
-      5. Se chegou em max_iter sem parar, preencher erro avisando.
-      6. Devolver Resultado("Bissecção", raiz, iteracoes, tempo_ms,
-         abs(f(raiz)), erro, historico).
+    A cada iteração, x é o ponto médio do intervalo.
     """
-    # TODO (Parte 1): implementar
-    return Resultado("Bissecção", erro="Ainda não implementado")
+    inicio_tempo = time.perf_counter()
+    historico = []
+
+    # Checagem de falha: sem mudança de sinal
+    if f(a) * f(b) >= 0:
+        return Resultado(metodo="Bissecção",
+                         erro="Falha: Sem mudança de sinal no intervalo inicial.")
+
+    x_anterior = None
+
+    for iteracao in range(1, max_iter + 1):
+        x = (a + b) / 2.0
+        fx = f(x)
+        historico.append(x)
+
+        # Critério de parada
+        if abs(fx) < eps or (x_anterior is not None and abs(x - x_anterior) < eps):
+            return Resultado(
+                metodo="Bissecção",
+                raiz=x,
+                iteracoes=iteracao,
+                tempo_ms=(time.perf_counter() - inicio_tempo) * 1000,
+                residuo=abs(fx),
+                historico=historico
+            )
+
+        # Atualização do intervalo mantendo a raiz
+        if f(a) * fx < 0:
+            b = x
+        else:
+            a = x
+
+        x_anterior = x
+
+    # Não convergiu: devolve a última aproximação para aparecer na tabela
+    return Resultado(
+        metodo="Bissecção",
+        raiz=x,
+        iteracoes=max_iter,
+        tempo_ms=(time.perf_counter() - inicio_tempo) * 1000,
+        residuo=abs(fx),
+        erro="Falha: Não convergiu após o número máximo de iterações.",
+        historico=historico
+    )
 
 
 def falsa_posicao(f: Callable[[float], float], a: float, b: float,
-                  eps: float, max_iter: int) -> Resultado:
+                  eps: float = 1e-6, max_iter: int = 100) -> Resultado:
     """
     Encontra uma raiz de f em [a, b] pelo método da Falsa Posição.
-
-    Igual à Bissecção, mas em vez do ponto médio usa o ponto onde a reta
-    entre (a, f(a)) e (b, f(b)) cruza o eixo x:
-
-        x = (a * f(b) - b * f(a)) / (f(b) - f(a))
-
-    Atenção: se f(b) - f(a) == 0, há divisão por zero -> devolver erro.
+    A cada iteração, x é onde a reta entre (a, f(a)) e (b, f(b)) cruza o eixo x.
     """
-    # TODO (Parte 1): implementar
-    return Resultado("Falsa Posição", erro="Ainda não implementado")
+    inicio_tempo = time.perf_counter()
+    historico = []
+
+    # Checagem de falha: sem mudança de sinal
+    if f(a) * f(b) >= 0:
+        return Resultado(metodo="Falsa Posição",
+                         erro="Falha: Sem mudança de sinal no intervalo inicial.")
+
+    x_anterior = None
+
+    for iteracao in range(1, max_iter + 1):
+        fa = f(a)
+        fb = f(b)
+
+        # Checagem de falha: divisão por zero
+        if fb - fa == 0:
+            return Resultado(
+                metodo="Falsa Posição",
+                iteracoes=iteracao,
+                tempo_ms=(time.perf_counter() - inicio_tempo) * 1000,
+                erro="Falha: Divisão por zero (f(b) = f(a)).",
+                historico=historico
+            )
+
+        x = (a * fb - b * fa) / (fb - fa)
+        fx = f(x)
+        historico.append(x)
+
+        # Critério de parada
+        if abs(fx) < eps or (x_anterior is not None and abs(x - x_anterior) < eps):
+            return Resultado(
+                metodo="Falsa Posição",
+                raiz=x,
+                iteracoes=iteracao,
+                tempo_ms=(time.perf_counter() - inicio_tempo) * 1000,
+                residuo=abs(fx),
+                historico=historico
+            )
+
+        # Atualização do intervalo mantendo a raiz
+        if fa * fx < 0:
+            b = x
+        else:
+            a = x
+
+        x_anterior = x
+
+    # Não convergiu: devolve a última aproximação para aparecer na tabela
+    return Resultado(
+        metodo="Falsa Posição",
+        raiz=x,
+        iteracoes=max_iter,
+        tempo_ms=(time.perf_counter() - inicio_tempo) * 1000,
+        residuo=abs(fx),
+        erro="Falha: Não convergiu após o número máximo de iterações.",
+        historico=historico
+    )
