@@ -23,8 +23,22 @@ def imprimir_tabela(resultados: list[Resultado]) -> None:
     no lugar dos números (ex.: "FALHOU: derivada nula").
     Dica: f-strings com alinhamento, ex.: f"{texto:<15}" e f"{num:>10.6f}".
     """
-    # TODO (Parte 3): implementar
-    raise NotImplementedError
+    cabecalho = (f"{'Método':<15} | {'Raiz':>14} | {'Iterações':>9} | "
+                 f"{'Tempo (ms)':>10} | {'|f(raiz)|':>9}")
+
+    print()
+    print(cabecalho)
+    print("-" * len(cabecalho))  # linha de traços do mesmo tamanho do cabeçalho
+
+    for r in resultados:
+        if r.erro is not None:
+            # O método falhou: mostra a mensagem no lugar dos números
+            print(f"{r.metodo:<15} | {r.erro}")
+        else:
+            print(f"{r.metodo:<15} | {r.raiz:>14.10f} | {r.iteracoes:>9} | "
+                  f"{r.tempo_ms:>10.4f} | {r.residuo:>9.2e}")
+
+    print()
 
 
 def plotar_grafico(f: Callable[[float], float], a: float, b: float,

@@ -23,6 +23,16 @@ CASOS = [
         "raiz_referencia": 0.7390851332,
     },
     {
+        "nome": "Problema 1: resfriamento, 20 + 90e^(-0.15t) - 50",
+        "funcao": "20 + 90*exp(-0.15*t) - 50",
+        # f(0) = 60 > 0 e f(20) ~ -25.5 < 0  ->  há raiz em [0, 20]
+        "a": 0.0, "b": 20.0,
+        "x0_newton": 0.0,
+        "x0_secante": 0.0, "x1_secante": 20.0,
+        "raiz_referencia": None,      # TODO: preencher depois de rodar (~7.32)   
+    },
+    {
+        
         "nome": "Problema 2: capacitor RC, 5(1 - e^-t) - 3.8",
         "funcao": "5*(1 - exp(-t)) - 3.8",
         # f(0) = -3.8 < 0 e f(3) ~ 0.95 > 0  ->  há raiz em [0, 3]
@@ -30,14 +40,5 @@ CASOS = [
         "x0_newton": 0.0,             # enunciado: uma das extremidades
         "x0_secante": 0.0, "x1_secante": 3.0,
         "raiz_referencia": None,      # TODO: preencher depois de rodar (~1.427)
-    },
-    {
-        "nome": "Problema 1: resfriamento, 20 + 90e^(-0.15t) - 50",
-        "funcao": "20 + 90*exp(-0.15*t) - 50",
-        # f(0) = 60 > 0 e f(20) ~ -25.5 < 0  ->  há raiz em [0, 20]
-        "a": 0.0, "b": 20.0,
-        "x0_newton": 0.0,
-        "x0_secante": 0.0, "x1_secante": 20.0,
-        "raiz_referencia": None,      # TODO: preencher depois de rodar (~7.32)
     },
 ]
