@@ -7,7 +7,7 @@ opostos (Teorema de Bolzano) e vão encolhendo esse intervalo até
 encontrar a raiz. Sempre convergem, mas costumam ser mais lentos.
 
 Critério de parada combinado pela equipe (usar o MESMO nos 4 métodos):
-    parar quando |f(x)| < eps   OU   |x_novo - x_anterior| < eps
+    parar quando |f(x)| < eps   (é exatamente a precisão que o PDF confere)
 """
 
 import time
@@ -30,15 +30,14 @@ def bisseccao(f: Callable[[float], float], a: float, b: float,
         return Resultado(metodo="Bissecção",
                          erro="Falha: Sem mudança de sinal no intervalo inicial.")
 
-    x_anterior = None
 
     for iteracao in range(1, max_iter + 1):
         x = (a + b) / 2.0
         fx = f(x)
         historico.append(x)
 
-        # Critério de parada
-        if abs(fx) < eps or (x_anterior is not None and abs(x - x_anterior) < eps):
+        # Critério de parada: resíduo |f(x)| menor que eps
+        if abs(fx) < eps:
             return Resultado(
                 metodo="Bissecção",
                 raiz=x,
@@ -53,8 +52,6 @@ def bisseccao(f: Callable[[float], float], a: float, b: float,
             b = x
         else:
             a = x
-
-        x_anterior = x
 
     # Não convergiu: devolve a última aproximação para aparecer na tabela
     return Resultado(
@@ -82,7 +79,6 @@ def falsa_posicao(f: Callable[[float], float], a: float, b: float,
         return Resultado(metodo="Falsa Posição",
                          erro="Falha: Sem mudança de sinal no intervalo inicial.")
 
-    x_anterior = None
 
     for iteracao in range(1, max_iter + 1):
         fa = f(a)
@@ -102,8 +98,8 @@ def falsa_posicao(f: Callable[[float], float], a: float, b: float,
         fx = f(x)
         historico.append(x)
 
-        # Critério de parada
-        if abs(fx) < eps or (x_anterior is not None and abs(x - x_anterior) < eps):
+        # Critério de parada: resíduo |f(x)| menor que eps
+        if abs(fx) < eps:
             return Resultado(
                 metodo="Falsa Posição",
                 raiz=x,
@@ -118,8 +114,6 @@ def falsa_posicao(f: Callable[[float], float], a: float, b: float,
             b = x
         else:
             a = x
-
-        x_anterior = x
 
     # Não convergiu: devolve a última aproximação para aparecer na tabela
     return Resultado(

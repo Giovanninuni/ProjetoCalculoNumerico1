@@ -35,8 +35,14 @@ def imprimir_tabela(resultados: list[Resultado]) -> None:
             # O método falhou: mostra a mensagem no lugar dos números
             print(f"{r.metodo:<15} | {r.erro}")
         else:
+            marca = " *" if r.aviso else ""  # * indica que há um aviso abaixo
             print(f"{r.metodo:<15} | {r.raiz:>14.10f} | {r.iteracoes:>9} | "
-                  f"{r.tempo_ms:>10.4f} | {r.residuo:>9.2e}")
+                  f"{r.tempo_ms:>10.4f} | {r.residuo:>9.2e}{marca}")
+
+    # Avisos ficam abaixo da tabela para não desalinhar as colunas
+    for r in resultados:
+        if r.aviso:
+            print(f"  * {r.metodo}: {r.aviso}")
 
     print()
 

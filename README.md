@@ -32,7 +32,7 @@ python testes.py    # testes dos 4 métodos
 
 | | Parte 1 — Métodos de intervalo | Parte 2 — Métodos abertos | Parte 3 — Interface e saída |
 |---|---|---|---|
-| **Quem** | Caio Benevides | _a definir_ | Giovanni Éber |
+| **Quem** | Caio Benevides | Tãua Oliveira | Giovanni Éber |
 | **Código** | Bissecção, Falsa Posição | Newton-Raphson, Secante | Menu, entrada, tabela, gráficos |
 | **Falhas tratadas** | Sem mudança de sinal, divisão por zero | Derivada nula, divisão por zero, saída do intervalo | Entrada inválida |
 | **Relatório** | Por que sempre convergem, mas são lentos | Por que são rápidos, mas podem falhar | Como executar, gráficos, relevância do circuito RC |
@@ -41,7 +41,8 @@ Análise crítica e conclusão do relatório: equipe toda.
 
 ## Combinados
 
-- Critério de parada igual para os 4 métodos: `|f(x)| < eps` **ou** `|x_novo - x_anterior| < eps`.
+- Critério de parada igual para os 4 métodos: `|f(x)| < eps` (a precisão que o PDF confere).
+- Método aberto que sai do intervalo **não falha**: continua e recebe um `aviso` no `Resultado`.
 - Mesmos `eps = 1e-6` e `max_iter = 100` em todos os métodos (o PDF pede comparação justa).
 - Cada um mexe principalmente no seu arquivo, para evitar conflitos no Git.
 - Todo método devolve um `Resultado` — nunca usa `print` nem `input` (quem mostra é o `relatorio.py`).

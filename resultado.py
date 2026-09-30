@@ -17,6 +17,7 @@ class Resultado:
     tempo_ms: float = 0.0        # Tempo de execução em milissegundos
     residuo: float | None = None  # Precisão final |f(raiz)|
     erro: str | None = None      # Mensagem de falha (None se deu certo)
+    aviso: str | None = None     # Algo notável que não é falha (ex.: saiu do intervalo e voltou)
     historico: list[float] = field(default_factory=list)  # Aproximação de cada iteração (usado nos gráficos)
 
     @property
