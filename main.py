@@ -15,7 +15,7 @@ from casos import CASOS, EPS_PADRAO, MAX_ITER_PADRAO
 from entrada import ler_funcao, ler_float, ler_int
 from metodos_intervalo import bisseccao, falsa_posicao
 from metodos_abertos import newton_raphson, secante
-from relatorio import imprimir_tabela, plotar_grafico
+from relatorio import imprimir_tabela, mostrar_janela
 from resultado import Resultado
 
 
@@ -64,7 +64,13 @@ def executar_comparacao(caso: dict, eps: float, max_iter: int) -> None:
     if caso.get("raiz_referencia") is not None:
         print(f"Raiz de referência: {caso['raiz_referencia']}\n")
 
-    # TODO (Parte 3): abrir a janela com tabela e gráficos (relatorio.mostrar_janela)
+    # Janela com tabela e gráficos (Enter = sim)
+    resposta = input("Abrir janela com a tabela e os gráficos? (S/n): ").strip().lower()
+    if resposta != "n":
+        print("Feche a janela para voltar ao menu...")
+        subtitulo = (f"f(x) = {caso['funcao']}   ·   [a, b] = [{a}, {b}]   ·   "
+                     f"ε = {eps:g}   ·   máx. {max_iter} iterações")
+        mostrar_janela(f, a, b, resultados, caso["nome"], subtitulo, eps)
 
 
 def montar_caso_personalizado() -> dict:
@@ -72,8 +78,53 @@ def montar_caso_personalizado() -> dict:
     Pergunta ao usuário a função e os dados iniciais e devolve um dict
     no mesmo formato dos itens de casos.CASOS.
     """
-    # TODO (Parte 3): implementar usando ler_float
-    raise NotImplementedError
+    print("\nDigite a função usando x (ou outra letra) como variável.")
+    print("Exemplos: cos(x) - x   |   x^3 - 2*x - 5   |   5*(1 - e^-t) - 3.8")
+    print("Use * para multiplicar (2*x, e não 2x). Aceita ^, e, sen, ln.")
+
+    # 1. Função: pergunta até o texto ser válido
+    while True:
+        texto = input("f(x) = ").strip()
+        try:
+            f, _, texto_derivada = ler_funcao(texto)
+            print(f"  f'(x) calculada: {texto_derivada}")
+            break
+        except ValueError as erro:
+            print(f"  {erro}")
+
+    # 2. Intervalo: pergunta até a < b, e avisa se não há mudança de sinal
+    while True:
+        a = ler_float("Início do intervalo a: ")
+        b = ler_float("Fim do intervalo b: ")
+        if a >= b:
+            print("  O início a precisa ser menor que o fim b.")
+            continue
+
+        try:
+            tem_mudanca_de_sinal = f(a) * f(b) < 0
+        except (ValueError, ZeroDivisionError, OverflowError):
+            print("  A função não pode ser calculada em a ou em b. Escolha outro intervalo.")
+            continue
+
+        if tem_mudanca_de_sinal:
+            break
+        print("  Atenção: f(a) e f(b) têm o mesmo sinal, então Bissecção e Falsa Posição vão falhar.")
+        if input("  Usar este intervalo mesmo assim? (s/n): ").strip().lower() == "s":
+            break
+
+    # 3. Chutes iniciais: Enter usa as pontas do intervalo (como o PDF sugere)
+    x0_newton = ler_float(f"x0 do Newton (Enter = {a}): ", padrao=a)
+    x0_secante = ler_float(f"x0 da Secante (Enter = {a}): ", padrao=a)
+    x1_secante = ler_float(f"x1 da Secante (Enter = {b}): ", padrao=b)
+
+    return {
+        "nome": f"Função personalizada: {texto}",
+        "funcao": texto,
+        "a": a, "b": b,
+        "x0_newton": x0_newton,
+        "x0_secante": x0_secante, "x1_secante": x1_secante,
+        "raiz_referencia": None,
+    }
 
 
 def main() -> None:
