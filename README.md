@@ -22,8 +22,10 @@ python testes.py    # testes dos 4 métodos
 | `resultado.py` | Classe `Resultado` — formato que **todos** os métodos devolvem | Equipe |
 | `metodos_intervalo.py` | Bissecção e Falsa Posição | Parte 1 |
 | `metodos_abertos.py` | Newton-Raphson e Secante | Parte 2 |
-| `entrada.py` | Leitura da função (sympy, derivada automática) e dos números | Parte 3 |
-| `relatorio.py` | Tabela comparativa e gráficos (matplotlib) | Parte 3 |
+| `entrada.py` | Leitura da função (sympy, derivada automática), dos números e da função personalizada | Parte 3 |
+| `relatorio.py` | Tabela no terminal e janela com tabela e gráficos (matplotlib) | Parte 3 |
+| `comparacao.py` | Roda os 4 métodos para um caso e mostra os resultados | Parte 3 |
+| `animacao.py` | Seletor e animação das iterações de cada método (vídeos em `docs/animacoes/`) | Parte 3 |
 | `casos.py` | Casos prontos do enunciado (exemplo, Problema 1 e 2) | Parte 3 |
 | `main.py` | Menu: escolher caso, novo cálculo ou sair | Parte 3 |
 | `testes.py` | Testes dos métodos, sem depender do menu | Equipe |

@@ -22,11 +22,15 @@ import argparse
 import math
 import os
 import re
+import sys
+import time
+import webbrowser
 from typing import Callable
 
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.animation import FFMpegWriter, FuncAnimation, PillowWriter
+from matplotlib.backend_tools import Cursors
 
 from casos import CASOS, EPS_PADRAO, MAX_ITER_PADRAO
 from entrada import ler_funcao
@@ -415,11 +419,33 @@ def escala_comum(f: Callable[[float], float], resultados: list[Resultado],
     return n_max, (min(min(residuos), eps) / 10, max(max(residuos), eps) * 10)
 
 
+def _quadros_em_tempo_real(total: int):
+    """
+    Gerador de índices de quadro guiado pelo RELÓGIO, não pela contagem.
+
+    Ao vivo, cada quadro leva ~130 ms para ser desenhado (bem mais que os
+    33 ms de 30 fps). Se a animação mostrasse todos os quadros, ficaria em
+    câmera lenta. Aqui, a cada vez que o matplotlib pede um quadro, damos o
+    quadro que "deveria" estar na tela agora — pulando os que não deu tempo
+    de desenhar. A animação fica menos fluida, mas com a duração certa.
+    """
+    inicio = time.perf_counter()
+    while True:
+        i = int((time.perf_counter() - inicio) * FPS)
+        if i >= total:  # chegou ao fim: recomeça (repetição)
+            inicio = time.perf_counter()
+            i = 0
+        yield i
+
+
 def criar_animacao(f: Callable[[float], float], resultado: Resultado, caso: dict,
-                   eps: float, nome_var: str = "x", escala: tuple | None = None):
+                   eps: float, nome_var: str = "x", escala: tuple | None = None,
+                   tempo_real: bool = False):
     """
     Monta a figura e a animação das iterações de UM método.
     escala: eixos do gráfico |f(xₖ)| (ver escala_comum); sem ela, usa só este método.
+    tempo_real: True para exibir ao vivo pulando quadros (duração certa);
+                False para salvar em vídeo (precisa de todos os quadros).
     """
     metodo = resultado.metodo
     cor = CORES_METODOS.get(metodo, COR_TEXTO)
@@ -481,8 +507,13 @@ def criar_animacao(f: Callable[[float], float], resultado: Resultado, caso: dict
         else:
             titulo_iter.set_text(f"iteração {k} de {len(passos)}" if k else "início")
 
-    animacao = FuncAnimation(fig, desenhar, frames=len(quadros),
-                             interval=1000 / FPS, repeat=True)
+    if tempo_real:
+        animacao = FuncAnimation(fig, desenhar,
+                                 frames=lambda: _quadros_em_tempo_real(len(quadros)),
+                                 interval=1, repeat=False, cache_frame_data=False)
+    else:
+        animacao = FuncAnimation(fig, desenhar, frames=len(quadros),
+                                 interval=1000 / FPS, repeat=True)
     return fig, animacao
 
 
@@ -497,10 +528,45 @@ def _nome_variavel(texto: str) -> str:
     return nomes.pop() if len(nomes) == 1 else "x"
 
 
-def _prefixo(caso: dict) -> str:
-    """Começo do nome dos arquivos: 'problema2', 'problema1' ou 'exemplo'."""
+PASTA_VIDEOS = os.path.join(os.path.dirname(os.path.abspath(__file__)), "docs", "animacoes")
+
+
+def _prefixo(caso: dict) -> str | None:
+    """
+    Começo do nome dos arquivos: 'problema2', 'problema1' ou 'exemplo'.
+    None para uma função digitada pelo usuário (não tem vídeo pronto).
+    """
+    if not any(caso["funcao"] == pronto["funcao"] for pronto in CASOS):
+        return None
     achou = re.match(r"Problema (\d+)", caso["nome"])
     return f"problema{achou.group(1)}" if achou else "exemplo"
+
+
+def _nome_arquivo(metodo: str) -> str:
+    """'Falsa Posição' -> 'falsa_posicao' (sem espaço, hífen ou acento)."""
+    return (metodo.lower().replace(" ", "_").replace("-", "_")
+            .replace("ç", "c").replace("ã", "a"))
+
+
+def _video_pronto(caso: dict, metodo: str, eps: float, max_iter: int) -> str | None:
+    """
+    Caminho do vídeo MP4 já gerado para este caso e método, se existir.
+    Os vídeos foram gerados com eps e max_iter padrão: com outros valores
+    as iterações mudam, então o vídeo não vale e a animação roda ao vivo.
+    """
+    prefixo = _prefixo(caso)
+    if prefixo is None or eps != EPS_PADRAO or max_iter != MAX_ITER_PADRAO:
+        return None
+    caminho = os.path.join(PASTA_VIDEOS, f"{prefixo}_{_nome_arquivo(metodo)}.mp4")
+    return caminho if os.path.exists(caminho) else None
+
+
+def _abrir_video(caminho: str) -> None:
+    """Abre o vídeo no player padrão do sistema (roda liso, a 30 fps)."""
+    if sys.platform == "win32":
+        os.startfile(caminho)  # só existe no Windows
+    else:
+        webbrowser.open("file://" + caminho)
 
 
 def rodar_metodos(caso: dict, eps: float, max_iter: int):
@@ -517,19 +583,77 @@ def rodar_metodos(caso: dict, eps: float, max_iter: int):
 
 
 def mostrar_animacoes(f, resultados: list[Resultado], caso: dict, eps: float,
-                      nome_var: str | None = None) -> None:
-    """Abre uma janela por método, uma de cada vez (feche para ver a próxima)."""
+                      max_iter: int = MAX_ITER_PADRAO, nome_var: str | None = None) -> None:
+    """
+    Abre um seletor com 4 quadrados, um por método. Clicar num quadrado:
+      - toca o vídeo MP4 pronto (casos de casos.py), liso a 30 fps; ou
+      - abre a animação ao vivo (funções digitadas), com a duração certa.
+    O seletor continua aberto para escolher outro método; feche-o para voltar ao menu.
+    """
     nome_var = nome_var or _nome_variavel(caso["funcao"])
     escala = escala_comum(f, resultados, eps)
-    for r in resultados:
-        if not r.historico:
-            print(f"  {r.metodo}: sem iterações para animar ({r.erro}).")
-            continue
-        print(f"  Animação: {r.metodo} (feche a janela para ver a próxima)")
-        fig, animacao = criar_animacao(f, r, caso, eps, nome_var, escala)
-        fig.canvas.manager.set_window_title(f"Iterações — {r.metodo}")
-        plt.show()
-        plt.close(fig)
+    abertas = []  # guarda as animações ao vivo (se não guardar, o Python as apaga)
+
+    fig = plt.figure(figsize=(11, 3.6), facecolor=COR_FUNDO)
+    fig.canvas.manager.set_window_title("Animações — escolha um método")
+    fig.text(0.03, 0.90, "Clique num método para ver a animação das iterações",
+             fontsize=13, fontweight="bold", color=COR_TEXTO)
+    fig.text(0.03, 0.82, caso["nome"], fontsize=10, color=COR_TEXTO_SECUNDARIO)
+
+    quadrados = {}  # área do quadrado (ax) -> resultado daquele método
+    for i, r in enumerate(resultados):
+        ax = fig.add_axes([0.03 + i * 0.2425, 0.08, 0.215, 0.62])
+        ax.set_xticks([])
+        ax.set_yticks([])
+        cor = CORES_METODOS.get(r.metodo, COR_TEXTO)
+        tem_animacao = bool(r.historico)
+        ax.set_facecolor("#ffffff" if tem_animacao else COR_GRADE)
+        for borda in ax.spines.values():
+            borda.set_color(cor if tem_animacao else COR_TEXTO_SECUNDARIO)
+            borda.set_linewidth(3)
+        ax.axhspan(0.82, 1.0, color=cor if tem_animacao else COR_TEXTO_SECUNDARIO)
+        ax.set_xlim(0, 1)
+        ax.set_ylim(0, 1)
+
+        ax.text(0.5, 0.58, r.metodo, ha="center", fontsize=12, fontweight="bold",
+                color=COR_TEXTO)
+        if tem_animacao:
+            ax.text(0.5, 0.40, f"{len(r.historico)} iterações", ha="center",
+                    fontsize=10, color=COR_TEXTO_SECUNDARIO)
+            modo = ("▶ vídeo (30 fps)" if _video_pronto(caso, r.metodo, eps, max_iter)
+                    else "▶ ao vivo")
+            ax.text(0.5, 0.15, modo, ha="center", fontsize=10, color=COR_TEXTO)
+            quadrados[ax] = r
+        else:
+            ax.text(0.5, 0.30, "sem iterações\npara animar", ha="center",
+                    fontsize=9, color=COR_TEXTO_SECUNDARIO)
+
+    def ao_clicar(evento):
+        r = quadrados.get(evento.inaxes)  # em qual quadrado foi o clique?
+        if r is None:
+            return
+        video = _video_pronto(caso, r.metodo, eps, max_iter)
+        if video:
+            print(f"  Abrindo vídeo: {os.path.basename(video)}")
+            _abrir_video(video)
+        else:
+            print(f"  Animação ao vivo: {r.metodo}")
+            fig_anim, animacao = criar_animacao(f, r, caso, eps, nome_var, escala,
+                                                tempo_real=True)
+            fig_anim.canvas.manager.set_window_title(f"Iterações — {r.metodo}")
+            abertas.append(animacao)
+            fig_anim.show()
+
+    def ao_passar_mouse(evento):
+        # Cursor de "mãozinha" em cima dos quadrados clicáveis
+        clicavel = evento.inaxes in quadrados
+        fig.canvas.set_cursor(Cursors.HAND if clicavel else Cursors.POINTER)
+
+    fig.canvas.mpl_connect("button_press_event", ao_clicar)
+    fig.canvas.mpl_connect("motion_notify_event", ao_passar_mouse)
+    print("  Feche a janela de seleção (e as animações) para voltar ao menu.")
+    plt.show()
+    plt.close("all")
 
 
 def salvar_animacoes(f, resultados: list[Resultado], caso: dict, eps: float,
@@ -545,9 +669,7 @@ def salvar_animacoes(f, resultados: list[Resultado], caso: dict, eps: float,
         if metodo and metodo.lower() not in r.metodo.lower():
             continue
         fig, animacao = criar_animacao(f, r, caso, eps, nome_var, escala)
-        nome_arquivo = (r.metodo.lower().replace(" ", "_").replace("-", "_")
-                        .replace("ç", "c").replace("ã", "a"))
-        caminho = os.path.join(pasta, f"{prefixo}_{nome_arquivo}.{formato}")
+        caminho = os.path.join(pasta, f"{prefixo}_{_nome_arquivo(r.metodo)}.{formato}")
         if formato == "mp4":
             # yuv420p: formato de cor que abre em qualquer player e no PowerPoint
             escritor = FFMpegWriter(fps=FPS, codec="libx264",

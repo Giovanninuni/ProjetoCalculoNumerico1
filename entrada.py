@@ -113,3 +113,57 @@ def ler_int(mensagem: str, padrao: int | None = None) -> int:
             continue
 
         return valor
+
+
+def montar_caso_personalizado() -> dict:
+    """
+    Pergunta ao usuário a função e os dados iniciais e devolve um dict
+    no mesmo formato dos itens de casos.CASOS.
+    """
+    print("\nDigite a função usando x (ou outra letra) como variável.")
+    print("Exemplos: cos(x) - x   |   x^3 - 2*x - 5   |   5*(1 - e^-t) - 3.8")
+    print("Use * para multiplicar (2*x, e não 2x). Aceita ^, e, sen, ln.")
+
+    # 1. Função: pergunta até o texto ser válido
+    while True:
+        texto = input("f(x) = ").strip()
+        try:
+            f, _, texto_derivada = ler_funcao(texto)
+            print(f"  f'(x) calculada: {texto_derivada}")
+            break
+        except ValueError as erro:
+            print(f"  {erro}")
+
+    # 2. Intervalo: pergunta até a < b, e avisa se não há mudança de sinal
+    while True:
+        a = ler_float("Início do intervalo a: ")
+        b = ler_float("Fim do intervalo b: ")
+        if a >= b:
+            print("  O início a precisa ser menor que o fim b.")
+            continue
+
+        try:
+            tem_mudanca_de_sinal = f(a) * f(b) < 0
+        except (ValueError, ZeroDivisionError, OverflowError):
+            print("  A função não pode ser calculada em a ou em b. Escolha outro intervalo.")
+            continue
+
+        if tem_mudanca_de_sinal:
+            break
+        print("  Atenção: f(a) e f(b) têm o mesmo sinal, então Bissecção e Falsa Posição vão falhar.")
+        if input("  Usar este intervalo mesmo assim? (s/n): ").strip().lower() == "s":
+            break
+
+    # 3. Chutes iniciais: Enter usa as pontas do intervalo (como o PDF sugere)
+    x0_newton = ler_float(f"x0 do Newton (Enter = {a}): ", padrao=a)
+    x0_secante = ler_float(f"x0 da Secante (Enter = {a}): ", padrao=a)
+    x1_secante = ler_float(f"x1 da Secante (Enter = {b}): ", padrao=b)
+
+    return {
+        "nome": f"Função personalizada: {texto}",
+        "funcao": texto,
+        "a": a, "b": b,
+        "x0_newton": x0_newton,
+        "x0_secante": x0_secante, "x1_secante": x1_secante,
+        "raiz_referencia": None,
+    }
