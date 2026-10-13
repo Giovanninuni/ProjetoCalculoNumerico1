@@ -11,6 +11,7 @@ Como executar:
 PARTE 3 — Menu principal: junta entrada, métodos e relatório.
 """
 
+from animacao import mostrar_animacoes
 from casos import CASOS, EPS_PADRAO, MAX_ITER_PADRAO
 from entrada import ler_funcao, ler_float, ler_int
 from metodos_intervalo import bisseccao, falsa_posicao
@@ -71,6 +72,11 @@ def executar_comparacao(caso: dict, eps: float, max_iter: int) -> None:
         subtitulo = (f"f(x) = {caso['funcao']}   ·   [a, b] = [{a}, {b}]   ·   "
                      f"ε = {eps:g}   ·   máx. {max_iter} iterações")
         mostrar_janela(f, a, b, resultados, caso["nome"], subtitulo, eps)
+
+    # Animação das iterações, uma janela por método (Enter = não)
+    resposta = input("Ver a animação das iterações de cada método? (s/N): ").strip().lower()
+    if resposta == "s":
+        mostrar_animacoes(f, resultados, caso, eps)
 
 
 def montar_caso_personalizado() -> dict:

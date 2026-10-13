@@ -29,7 +29,8 @@ CASOS = [
         "a": 0.0, "b": 20.0,
         "x0_newton": 0.0,
         "x0_secante": 0.0, "x1_secante": 20.0,
-        "raiz_referencia": None,      # TODO: preencher depois de rodar (~7.32)   
+        # Solução exata: 90e^(-0.15t) = 30  ->  t = ln(3) / 0.15
+        "raiz_referencia": 7.3240819245,
     },
     {
         
@@ -39,6 +40,7 @@ CASOS = [
         "a": 0.0, "b": 3.0,
         "x0_newton": 0.0,             # enunciado: uma das extremidades
         "x0_secante": 0.0, "x1_secante": 3.0,
-        "raiz_referencia": None,      # TODO: preencher depois de rodar (~1.427)
+        # Solução exata: e^(-t) = 1 - 3.8/5 = 0.24  ->  t = -ln(0.24)
+        "raiz_referencia": 1.4271163556,
     },
 ]

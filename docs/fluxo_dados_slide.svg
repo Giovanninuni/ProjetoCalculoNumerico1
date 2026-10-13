@@ -1,0 +1,237 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="880" viewBox="0 0 1920 880">
+  <defs>
+    <marker id="seta" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M1 1 L9 5 L1 9" fill="none" stroke="#CFE3EA" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+    <style>
+      text { font-family: "IBM Plex Sans", Arial, sans-serif; fill: #FFFFFF; }
+      .mono { font-family: "IBM Plex Mono", Consolas, monospace; }
+      .h { font-size: 16px; font-weight: 700; fill: #21D4D8; letter-spacing: 2px; }
+      .fluxo { fill: none; stroke: #CFE3EA; stroke-width: 2.5; }
+      /* main.py */
+      .b-main { fill: #126782; }
+      .t-main { fill: #FFFFFF; }
+      .d-main { fill: #CFE7EF; }
+      /* entrada.py / casos.py */
+      .b-ent { fill: #F4F1E8; }
+      .t-ent { fill: #102631; }
+      .d-ent { fill: #4A5C66; }
+      /* métodos */
+      .b-met { fill: #21D4D8; }
+      .t-met { fill: #102631; }
+      .d-met { fill: #0E4552; }
+      /* relatorio.py */
+      .b-rel { fill: #FF8A3D; }
+      .t-rel { fill: #102631; }
+      .d-rel { fill: #5A2A0C; }
+    </style>
+  </defs>
+
+  <rect width="1920" height="880" fill="#071521"/>
+
+  <g transform="translate(0,-140)">
+  <!-- Cabeçalhos das colunas -->
+  <g text-anchor="middle">
+    <text class="h" x="165" y="180">1 · ENTRADA</text>
+    <text class="h" x="515" y="180">2 · MONTAGEM</text>
+    <text class="h" x="840" y="180">3 · PREPARAÇÃO</text>
+    <text class="h" x="1170" y="180">4 · MÉTODOS</text>
+    <text class="h" x="1485" y="180">5 · RESULTADO</text>
+    <text class="h" x="1770" y="180">6 · SAÍDA</text>
+  </g>
+
+  <!-- ===== Setas ===== -->
+  <g class="fluxo" marker-end="url(#seta)">
+    <path d="M165 370 L165 446"/>
+    <path d="M290 515 C335 515 335 260 376 260"/>
+    <path d="M290 515 C335 515 335 512 376 512"/>
+    <path d="M290 515 C335 515 335 765 376 765"/>
+    <path d="M650 260 C680 260 680 385 706 385"/>
+    <path d="M650 512 C680 512 680 385 706 385"/>
+    <path d="M650 765 C680 765 680 385 706 385"/>
+    <path d="M840 440 L840 496"/>
+    <path d="M970 575 C1000 575 1000 520 1026 520"/>
+    <path d="M1290 333 C1330 333 1330 470 1366 470"/>
+    <path d="M1290 415 C1330 415 1330 470 1366 470"/>
+    <path d="M1290 525 C1330 525 1330 470 1366 470"/>
+    <path d="M1290 607 C1330 607 1330 470 1366 470"/>
+    <path d="M1600 470 C1630 470 1630 270 1656 270"/>
+    <path d="M1600 470 L1656 470"/>
+    <path d="M1770 310 L1770 326"/>
+    <path d="M1770 505 L1770 521"/>
+    <path d="M1770 585 L1770 601"/>
+    <path d="M1770 715 L1770 731"/>
+  </g>
+  <text x="1000" y="602" text-anchor="middle" class="mono" style="font-size:14px;fill:#21D4D8">f, f'</text>
+
+  <!-- ===== 1 · ENTRADA ===== -->
+  <rect x="65" y="320" width="200" height="50" rx="25" fill="none" stroke="#FFFFFF" stroke-width="2"/>
+  <text x="165" y="351" text-anchor="middle" style="font-size:18px;font-weight:700">Usuário digita</text>
+
+  <rect class="b-main" x="40" y="450" width="250" height="130" rx="18"/>
+  <g text-anchor="middle">
+    <text class="mono t-main" x="165" y="497" style="font-size:28px;font-weight:700">main()</text>
+    <text class="t-main" x="165" y="528" style="font-size:18px">Menu no terminal</text>
+    <text class="d-main" x="165" y="555" style="font-size:15px">caso pronto, digitar ou sair</text>
+  </g>
+
+  <!-- ===== 2 · MONTAGEM ===== -->
+  <rect class="b-ent" x="380" y="200" width="270" height="120" rx="18"/>
+  <g text-anchor="middle">
+    <text class="mono t-ent" x="515" y="243" style="font-size:24px;font-weight:700">CASOS[i]</text>
+    <text class="d-ent" x="515" y="271" style="font-size:15px">casos.py · caso pronto</text>
+    <text class="d-ent" x="515" y="295" style="font-size:15px">f em texto, a, b, x0, x1</text>
+  </g>
+
+  <rect class="b-main" x="380" y="370" width="270" height="285" rx="18"/>
+  <g text-anchor="middle">
+    <text class="mono t-main" x="515" y="405" style="font-size:20px;font-weight:700">montar_caso_</text>
+    <text class="mono t-main" x="515" y="430" style="font-size:20px;font-weight:700">personalizado()</text>
+    <rect class="b-ent" x="398" y="450" width="234" height="56" rx="10"/>
+    <text class="mono t-ent" x="515" y="474" style="font-size:16px;font-weight:700">ler_funcao(texto)</text>
+    <text class="d-ent" x="515" y="496" style="font-size:13px">valida a função digitada</text>
+    <rect class="b-ent" x="398" y="516" width="234" height="56" rx="10"/>
+    <text class="mono t-ent" x="515" y="540" style="font-size:16px;font-weight:700">ler_float(a), (b)</text>
+    <text class="d-ent" x="515" y="562" style="font-size:13px">intervalo e troca de sinal</text>
+    <rect class="b-ent" x="398" y="582" width="234" height="56" rx="10"/>
+    <text class="mono t-ent" x="515" y="606" style="font-size:16px;font-weight:700">ler_float(x0, x1)</text>
+    <text class="d-ent" x="515" y="628" style="font-size:13px">chutes iniciais (Enter = a, b)</text>
+  </g>
+
+  <rect class="b-ent" x="380" y="700" width="270" height="130" rx="18"/>
+  <g text-anchor="middle">
+    <text class="mono t-ent" x="515" y="740" style="font-size:19px;font-weight:700">ler_float(eps)</text>
+    <text class="mono t-ent" x="515" y="766" style="font-size:19px;font-weight:700">ler_int(max_iter)</text>
+    <text class="d-ent" x="515" y="794" style="font-size:15px">precisão e limite de iterações</text>
+    <text class="d-ent" x="515" y="816" style="font-size:14px">Enter = 1e-6 e 100</text>
+  </g>
+
+  <!-- ===== 3 · PREPARAÇÃO ===== -->
+  <rect class="b-main" x="710" y="330" width="260" height="110" rx="18"/>
+  <g text-anchor="middle">
+    <text class="mono t-main" x="840" y="368" style="font-size:20px;font-weight:700">executar_</text>
+    <text class="mono t-main" x="840" y="393" style="font-size:20px;font-weight:700">comparacao()</text>
+    <text class="d-main" x="840" y="421" style="font-size:14px">recebe caso, eps, max_iter</text>
+  </g>
+
+  <rect class="b-ent" x="710" y="500" width="260" height="150" rx="18"/>
+  <g text-anchor="middle">
+    <text class="mono t-ent" x="840" y="535" style="font-size:19px;font-weight:700">ler_funcao(texto)</text>
+    <text class="mono" x="840" y="562" style="font-size:14px;fill:#126782">sympify → diff → lambdify</text>
+    <line x1="730" y1="578" x2="950" y2="578" stroke="#C9C4B5" stroke-width="1"/>
+    <text class="t-ent" x="840" y="604" style="font-size:17px;font-weight:700">texto vira f(x) e f'(x)</text>
+    <text class="d-ent" x="840" y="627" style="font-size:14px">derivada calculada pelo sympy</text>
+  </g>
+
+  <!-- ===== 4 · MÉTODOS ===== -->
+  <rect x="1030" y="200" width="280" height="640" rx="20" fill="#0C2230" stroke="#2A8FAE" stroke-width="2" stroke-dasharray="9 7"/>
+  <g text-anchor="middle">
+    <text class="mono" x="1170" y="233" style="font-size:19px;font-weight:700">rodar_com_seguranca()</text>
+    <text x="1170" y="256" style="font-size:14px;fill:#9FC3CF">chama cada método e captura erros</text>
+  </g>
+
+  <text x="1050" y="288" style="font-size:14px;font-weight:700;fill:#21D4D8;letter-spacing:1px">INTERVALO</text>
+  <g text-anchor="middle">
+    <rect class="b-met" x="1050" y="298" width="240" height="70" rx="12"/>
+    <text class="mono t-met" x="1170" y="328" style="font-size:19px;font-weight:700">bisseccao()</text>
+    <text class="d-met" x="1170" y="352" style="font-size:14px">usa f, a, b</text>
+    <rect class="b-met" x="1050" y="380" width="240" height="70" rx="12"/>
+    <text class="mono t-met" x="1170" y="410" style="font-size:19px;font-weight:700">falsa_posicao()</text>
+    <text class="d-met" x="1170" y="434" style="font-size:14px">usa f, a, b</text>
+  </g>
+
+  <text x="1050" y="480" style="font-size:14px;font-weight:700;fill:#21D4D8;letter-spacing:1px">ABERTOS</text>
+  <g text-anchor="middle">
+    <rect class="b-met" x="1050" y="490" width="240" height="70" rx="12"/>
+    <text class="mono t-met" x="1170" y="520" style="font-size:19px;font-weight:700">newton_raphson()</text>
+    <text class="d-met" x="1170" y="544" style="font-size:14px">usa f, f', x0</text>
+    <rect class="b-met" x="1050" y="572" width="240" height="70" rx="12"/>
+    <text class="mono t-met" x="1170" y="602" style="font-size:19px;font-weight:700">secante()</text>
+    <text class="d-met" x="1170" y="626" style="font-size:14px">usa f, x0, x1</text>
+    <line x1="1170" y1="642" x2="1170" y2="660" stroke="#21D4D8" stroke-width="1.5" stroke-dasharray="4 3"/>
+    <rect x="1066" y="660" width="208" height="82" rx="10" fill="none" stroke="#21D4D8" stroke-width="1.5" stroke-dasharray="5 4"/>
+    <text class="mono" x="1170" y="686" style="font-size:14px;fill:#21D4D8">_fora_do_intervalo()</text>
+    <text class="mono" x="1170" y="707" style="font-size:14px;fill:#21D4D8">_montar_aviso()</text>
+    <text x="1170" y="729" style="font-size:13px;fill:#9FC3CF">aviso de extrapolação</text>
+  </g>
+  <text x="1170" y="792" text-anchor="middle" style="font-size:14px;fill:#9FC3CF">se um método quebrar, vira um</text>
+  <text x="1170" y="812" text-anchor="middle" style="font-size:14px;fill:#9FC3CF">Resultado com erro (não trava)</text>
+
+  <!-- ===== 5 · RESULTADO ===== -->
+  <rect x="1370" y="250" width="230" height="450" rx="18" fill="#0C2230" stroke="#FF8A3D" stroke-width="2.5"/>
+  <g text-anchor="middle">
+    <text class="mono" x="1485" y="291" style="font-size:24px;font-weight:700;fill:#FF8A3D">Resultado</text>
+    <text x="1485" y="315" style="font-size:14px;fill:#9FC3CF">resultado.py · 1 por método</text>
+  </g>
+  <line x1="1388" y1="331" x2="1582" y2="331" stroke="#2C4757" stroke-width="1"/>
+  <g class="mono" style="font-size:16px;fill:#F4F1E8">
+    <text x="1388" y="363">metodo</text>
+    <text x="1388" y="395">raiz</text>
+    <text x="1388" y="427">iteracoes</text>
+    <text x="1388" y="459">tempo_ms</text>
+    <text x="1388" y="491">residuo</text>
+    <text x="1388" y="523">erro</text>
+    <text x="1388" y="555">aviso</text>
+    <text x="1388" y="587">historico</text>
+  </g>
+  <g text-anchor="end" style="font-size:13px;fill:#9FC3CF">
+    <text x="1584" y="363">nome</text>
+    <text x="1584" y="395">x achado</text>
+    <text x="1584" y="427">quantas</text>
+    <text x="1584" y="459">tempo</text>
+    <text x="1584" y="491">|f(raiz)|</text>
+    <text x="1584" y="523">falha</text>
+    <text x="1584" y="555">extrapolou</text>
+    <text x="1584" y="587">x a cada passo</text>
+  </g>
+  <line x1="1388" y1="611" x2="1582" y2="611" stroke="#2C4757" stroke-width="1"/>
+  <g text-anchor="middle">
+    <text class="mono" x="1485" y="646" style="font-size:17px;font-weight:700;fill:#FF8A3D">list[Resultado]</text>
+    <text x="1485" y="670" style="font-size:14px;fill:#9FC3CF">os 4 juntos, para comparar</text>
+  </g>
+
+  <!-- ===== 6 · SAÍDA ===== -->
+  <g text-anchor="middle">
+    <rect class="b-rel" x="1660" y="230" width="220" height="80" rx="16"/>
+    <text class="mono t-rel" x="1770" y="266" style="font-size:17px;font-weight:700">imprimir_tabela()</text>
+    <text class="d-rel" x="1770" y="291" style="font-size:14px">relatorio.py</text>
+
+    <rect x="1670" y="330" width="200" height="48" rx="24" fill="none" stroke="#FFFFFF" stroke-width="2"/>
+    <text x="1770" y="360" style="font-size:16px;font-weight:700">Tabela no terminal</text>
+
+    <text x="1770" y="424" style="font-size:14px;font-style:italic;fill:#9FC3CF">"Abrir janela? (S/n)"</text>
+
+    <rect class="b-rel" x="1660" y="435" width="220" height="70" rx="16"/>
+    <text class="mono t-rel" x="1770" y="465" style="font-size:17px;font-weight:700">mostrar_janela()</text>
+    <text class="d-rel" x="1770" y="489" style="font-size:13px">recebe f, a, b e resultados</text>
+
+    <rect class="b-rel" x="1660" y="525" width="220" height="60" rx="16"/>
+    <text class="mono t-rel" x="1770" y="561" style="font-size:17px;font-weight:700">criar_figura()</text>
+
+    <rect x="1660" y="605" width="220" height="110" rx="14" fill="none" stroke="#FF8A3D" stroke-width="1.5" stroke-dasharray="5 4"/>
+    <text class="mono" x="1770" y="638" style="font-size:14px;fill:#FFB27F">_desenhar_tabela()</text>
+    <text class="mono" x="1770" y="665" style="font-size:14px;fill:#FFB27F">_desenhar_funcao()</text>
+    <text class="mono" x="1770" y="692" style="font-size:12.5px;fill:#FFB27F">_desenhar_convergencia()</text>
+
+    <rect x="1670" y="735" width="200" height="48" rx="24" fill="none" stroke="#FFFFFF" stroke-width="2"/>
+    <text x="1770" y="765" style="font-size:16px;font-weight:700">Janela com gráficos</text>
+  </g>
+  </g>
+
+  <!-- ===== Legenda ===== -->
+  <line x1="40" y1="760" x2="1880" y2="760" stroke="#1E3646" stroke-width="1"/>
+  <g style="font-size:16px">
+    <text x="40" y="808" style="font-weight:700;fill:#9FC3CF">Cor = arquivo:</text>
+    <rect class="b-main" x="180" y="793" width="20" height="20" rx="5"/>
+    <text class="mono" x="210" y="808">main.py</text>
+    <rect class="b-ent" x="320" y="793" width="20" height="20" rx="5"/>
+    <text class="mono" x="350" y="808">entrada.py · casos.py</text>
+    <rect class="b-met" x="590" y="793" width="20" height="20" rx="5"/>
+    <text class="mono" x="620" y="808">metodos_intervalo.py · metodos_abertos.py</text>
+    <rect x="1040" y="793" width="20" height="20" rx="5" fill="#0C2230" stroke="#FF8A3D" stroke-width="2"/>
+    <text class="mono" x="1070" y="808">resultado.py</text>
+    <rect class="b-rel" x="1220" y="793" width="20" height="20" rx="5"/>
+    <text class="mono" x="1250" y="808">relatorio.py</text>
+  </g>
+  <text x="40" y="850" style="font-size:15px;fill:#9FC3CF">Cada seta é um dado indo de uma função para a próxima. Contornos tracejados = funções auxiliares chamadas lá dentro.</text>
+</svg>
