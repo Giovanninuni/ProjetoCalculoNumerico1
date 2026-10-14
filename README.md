@@ -5,7 +5,7 @@ Simulador de Resolução de Equações Algébricas e Transcendentes — compara
 tempo de execução e |f(raiz)|).
 
 Cálculo Numérico — UNIVASF 2026.2 — Projeto Unidade 1 (Zeros).
-Enunciado completo: [ProjetoCalculoNumeroInstrucoes.pdf](ProjetoCalculoNumeroInstrucoes.pdf)
+Enunciado completo: [Instrucoes.pdf](docs/Instrucoes.pdf)
 
 ## Como executar
 
