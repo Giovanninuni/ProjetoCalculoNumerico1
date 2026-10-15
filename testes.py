@@ -1,12 +1,15 @@
 """
-Testes rápidos dos 4 métodos — não dependem de sympy nem do menu.
+Testes dos 4 métodos — não dependem de sympy nem do menu.
 
 Como rodar:
     python testes.py
 
-Cada integrante pode rodar isto enquanto implementa sua parte.
-Enquanto um método não estiver implementado, os testes dele vão falhar
-(é o esperado).
+As funções são escritas direto com math (sem passar por entrada.py),
+para testar só os métodos. Cada bloco confere:
+    1. exemplo do enunciado, cos(x) - x: raiz ~ 0,7390851332;
+    2. Problema 2 (circuito RC): raiz exata -ln(0,24);
+    3. as falhas que os métodos precisam detectar (sem mudança de sinal,
+       derivada nula, divisão por zero na Secante).
 """
 
 import math
@@ -64,27 +67,20 @@ testar_raiz(falsa_posicao(g, 0, 3, EPS, MAX_ITER), RAIZ_RC)
 testar_raiz(newton_raphson(g, dg, 0, EPS, MAX_ITER), RAIZ_RC)
 testar_raiz(secante(g, 0, 3, EPS, MAX_ITER), RAIZ_RC)
 
-# --- Falhas que o PDF pede para tratar ------------------------------------
+# --- Falhas que os métodos precisam detectar ------------------------------
 print("\nTratamento de falhas")
-
-
-def tratou_falha(resultado) -> bool:
-    """O método precisa devolver um erro de verdade, não o aviso do esqueleto."""
-    return resultado.erro is not None and resultado.erro != "Ainda não implementado"
-
-
 h = lambda x: x ** 2 - 1  # raízes em -1 e 1
 
-r = bisseccao(h, 2, 3, EPS, MAX_ITER)
-verificar(f"Bissecção sem mudança de sinal devolve erro ({r.erro})", tratou_falha(r))
+r = bisseccao(h, 2, 3, EPS, MAX_ITER)  # h(2) e h(3) são positivos
+verificar(f"Bissecção sem mudança de sinal devolve erro ({r.erro})", r.erro is not None)
 
 r = falsa_posicao(h, 2, 3, EPS, MAX_ITER)
-verificar(f"Falsa Posição sem mudança de sinal devolve erro ({r.erro})", tratou_falha(r))
+verificar(f"Falsa Posição sem mudança de sinal devolve erro ({r.erro})", r.erro is not None)
 
-r = newton_raphson(h, lambda x: 2 * x, 0, EPS, MAX_ITER)
-verificar(f"Newton com derivada nula (x0 = 0) devolve erro ({r.erro})", tratou_falha(r))
+r = newton_raphson(h, lambda x: 2 * x, 0, EPS, MAX_ITER)  # h'(0) = 0
+verificar(f"Newton com derivada nula (x0 = 0) devolve erro ({r.erro})", r.erro is not None)
 
 r = secante(h, -2, 2, EPS, MAX_ITER)  # h(-2) == h(2) -> divisão por zero
-verificar(f"Secante com f(x0) == f(x1) devolve erro ({r.erro})", tratou_falha(r))
+verificar(f"Secante com f(x0) == f(x1) devolve erro ({r.erro})", r.erro is not None)
 
 print(f"\nResumo: {aprovados} OK, {reprovados} falharam.")

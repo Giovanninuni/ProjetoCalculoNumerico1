@@ -1,19 +1,20 @@
 """
-Parte 2 - Métodos Abertos: Newton-Raphson e Secante.
-Autoria: Tãua Oliveira
+Métodos abertos: Newton-Raphson e Secante.
+Responsável: Tãua Oliveira
 
-Regras comuns (ver PDF da Parte 2):
-    - eps e max_iter são sempre os mesmos nos 4 métodos, para a
-      comparação ser justa.
-    - Critério de parada: |f(x)| < eps (a precisão que o PDF confere).
-    - Cada função conta as iterações, guarda o histórico de x (um valor
-      por iteração, sem os chutes iniciais) e mede o tempo com
-      time.perf_counter().
-    - Se x sair do intervalo informado, NÃO é falha: o método continua e
-      o Resultado recebe um aviso (o PDF pede para registrar
-      "extrapolação do intervalo").
-    - Nunca usar print/input aqui — quem mostra os resultados na tela é
-      o relatorio.py. Sempre devolver um Resultado (ver resultado.py).
+Partem de uma (Newton) ou duas (Secante) estimativas iniciais, sem exigir
+mudança de sinal, e usam uma reta (tangente ou secante) para saltar para
+perto da raiz. Convergem mais rápido, mas podem falhar.
+
+Fluxo de cada método:
+    1. a cada iteração calcula x_novo pela fórmula do método — antes,
+       confere se o denominador não é ~0 (derivada nula / f(x1) == f(x0));
+    2. se x_novo sair do intervalo informado, registra um AVISO e continua
+       (não é falha: o método pode voltar e convergir);
+    3. guarda x_novo no histórico (um valor por iteração, sem os chutes
+       iniciais) e para quando |f(x_novo)| < eps — o mesmo critério dos
+       métodos de intervalo — ou devolve erro ao chegar em max_iter.
+O tempo é medido com time.perf_counter() e tudo volta num Resultado.
 """
 
 import time

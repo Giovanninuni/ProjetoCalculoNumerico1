@@ -1,8 +1,16 @@
 """
-PARTE 3 — Saída: tabela no terminal e janela com tabela e gráficos.
+Saída dos resultados: tabela no terminal e janela com tabela e gráficos.
+Responsável: Giovanni Éber
 
 Só depende do formato Resultado (resultado.py): não sabe nada de como
 cada método calcula, só lê os campos do resultado.
+
+Fluxo da janela:
+    mostrar_janela -> criar_figura -> _desenhar_tabela       (em cima)
+                                   -> _desenhar_funcao       (embaixo, à esquerda)
+                                   -> _desenhar_convergencia (embaixo, à direita)
+criar_figura só monta a figura; mostrar_janela a exibe. Separadas assim,
+a figura também pode ser salva como imagem sem abrir a janela.
 """
 
 from typing import Callable
@@ -17,14 +25,14 @@ def imprimir_tabela(resultados: list[Resultado]) -> None:
     """
     Mostra no terminal uma tabela com uma linha por método:
 
-        Método          | Raiz         | Iterações | Tempo (ms) | |f(raiz)|
-        ----------------+--------------+-----------+------------+----------
-        Bissecção       | 0.7390851...  |        20 |     0.0123 | 4.1e-07
-        ...
+        Método          |           Raiz | Iterações | Tempo (ms) | |f(raiz)|
+        ---------------------------------------------------------------------
+        Bissecção       |   0.7390851974 |        20 |     0.0193 |  1.08e-07
 
-    Se resultado.erro não for None, mostrar a mensagem de erro na linha
-    no lugar dos números (ex.: "FALHOU: derivada nula").
-    Dica: f-strings com alinhamento, ex.: f"{texto:<15}" e f"{num:>10.6f}".
+    As colunas ficam alinhadas porque cada valor é formatado com largura
+    fixa na f-string (ex.: :<15 alinha à esquerda em 15 caracteres).
+    Se o método falhou, a mensagem de erro aparece no lugar dos números;
+    avisos (*) ficam abaixo da tabela para não desalinhar as colunas.
     """
     cabecalho = (f"{'Método':<15} | {'Raiz':>14} | {'Iterações':>9} | "
                  f"{'Tempo (ms)':>10} | {'|f(raiz)|':>9}")
@@ -51,7 +59,7 @@ def imprimir_tabela(resultados: list[Resultado]) -> None:
 
 
 # ---------------------------------------------------------------------------
-# Janela com tabela e gráficos (bônus do PDF)
+# Janela com tabela e gráficos
 # ---------------------------------------------------------------------------
 
 # Cada método tem sempre a mesma cor (paleta testada para daltonismo)

@@ -1,13 +1,16 @@
 """
-PARTE 3 — Casos prontos do enunciado, para o menu oferecer sem o usuário
-precisar digitar tudo.
+Casos prontos do enunciado, oferecidos no menu sem o usuário digitar nada.
 
-As funções ficam como TEXTO (ex.: "cos(x) - x"); quem transforma o texto
-em função de verdade é o entrada.py (com sympy).
+Cada caso é um dicionário com as mesmas chaves que entrada.montar_caso_personalizado
+devolve, então comparacao.executar_comparacao trata os dois do mesmo jeito.
 
-REVISAR em equipe: os intervalos dos Problemas 1 e 2 foram escolhidos
-por nós (o enunciado pede para a equipe definir). Conferir que há
-mudança de sinal: f(a) e f(b) com sinais opostos.
+A função fica como TEXTO (ex.: "cos(x) - x"); entrada.ler_funcao a converte
+em f e f' na hora de calcular.
+
+Nos Problemas 1 e 2 o enunciado deixa o intervalo a critério da equipe.
+Os intervalos escolhidos têm mudança de sinal (f(a) e f(b) com sinais
+opostos), como exigem a Bissecção e a Falsa Posição, e os chutes iniciais
+de Newton e Secante são as pontas do intervalo, como o enunciado pede.
 """
 
 EPS_PADRAO = 1e-6

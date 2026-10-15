@@ -1,13 +1,17 @@
 """
-PARTE 1 — Métodos de intervalo: Bissecção e Falsa Posição.
-Autor: Caio Benevides
+Métodos de intervalo: Bissecção e Falsa Posição.
+Responsável: Caio Benevides
 
 Os dois partem de um intervalo [a, b] onde f(a) e f(b) têm sinais
 opostos (Teorema de Bolzano) e vão encolhendo esse intervalo até
 encontrar a raiz. Sempre convergem, mas costumam ser mais lentos.
 
-Critério de parada combinado pela equipe (usar o MESMO nos 4 métodos):
-    parar quando |f(x)| < eps   (é exatamente a precisão que o PDF confere)
+Fluxo de cada método:
+    1. confere a mudança de sinal em [a, b] (se não houver, devolve erro);
+    2. a cada iteração calcula um x dentro de [a, b], guarda no histórico
+       e troca a ou b por x, mantendo a raiz dentro do intervalo;
+    3. para quando |f(x)| < eps — o mesmo critério dos métodos abertos —
+       ou devolve erro ao chegar em max_iter.
 """
 
 import time

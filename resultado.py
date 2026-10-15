@@ -1,9 +1,14 @@
 """
-Formato de resultado compartilhado por TODOS os métodos.
+Resultado: o formato que os 4 métodos devolvem.
 
-É o "contrato" da equipe: toda função de método devolve um Resultado,
-então a Parte 3 (tabela e gráficos) não precisa saber como cada método
-funciona por dentro — só lê estes campos.
+Fluxo: cada método (metodos_intervalo.py, metodos_abertos.py) preenche um
+Resultado; relatorio.py e animacao.py só leem estes campos para montar a
+tabela, os gráficos e as animações, sem saber como cada método calcula.
+
+erro x aviso:
+    erro  -> o método falhou e a raiz não vale (ex.: sem mudança de sinal);
+    aviso -> o método convergiu, mas algo merece registro
+             (ex.: um método aberto saiu do intervalo e voltou).
 """
 
 from dataclasses import dataclass, field

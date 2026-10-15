@@ -1,5 +1,12 @@
 """
-PARTE 3 — Animação das iterações de cada método.
+Animação das iterações de cada método.
+Responsável: Giovanni Éber
+
+Pelo menu, mostrar_animacoes abre um seletor com 4 quadrados. Ao clicar:
+    - casos de casos.py (com eps e max_iter padrão): toca o vídeo MP4 já
+      gerado em docs/animacoes/, no player do sistema (liso, 30 fps);
+    - funções digitadas ou outros eps/max_iter: anima ao vivo, pulando
+      quadros para manter a duração certa (cada quadro leva ~130 ms).
 
 Para cada método, um gráfico que se atualiza a cada iteração:
     - à esquerda, a curva de f com a "construção" do passo k

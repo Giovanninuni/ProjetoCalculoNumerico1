@@ -1,9 +1,14 @@
 """
-PARTE 3 — Entrada de dados do usuário.
+Entrada de dados: transforma o que o usuário digita em algo que os
+métodos conseguem usar, sem deixar o programa quebrar com entrada inválida.
+Responsável: Giovanni Éber
 
-Responsável por transformar o que o usuário digita em algo que os
-métodos consigam usar, e por não deixar o programa quebrar com entrada
-inválida (o PDF avalia "facilidade na entrada dos dados").
+Dois tipos de função:
+    ler_funcao       -> só CONVERTE um texto já pronto (vindo de casos.py
+                        ou digitado); não faz input().
+    ler_float,       -> CONVERSAM com o usuário: perguntam, validam e
+    ler_int,            perguntam de novo até a resposta ser válida.
+    montar_caso_personalizado
 """
 
 import math
@@ -16,17 +21,15 @@ def ler_funcao(texto: str) -> tuple[Callable[[float], float], Callable[[float], 
     """
     Converte um texto como "cos(x) - x" em duas funções Python: f e f'.
 
-    Ideia com sympy:
-      1. expr = sympy.sympify(texto)          -> texto vira expressão
-      2. descobrir a variável (x, t, ...) com expr.free_symbols
-         (deve haver exatamente UMA variável; senão, erro)
-      3. dexpr = sympy.diff(expr, variavel)   -> derivada automática
-      4. f  = sympy.lambdify(variavel, expr,  "math")
-         df = sympy.lambdify(variavel, dexpr, "math")
-      5. devolver (f, df, str(dexpr)) — o texto da derivada serve para
-         mostrar ao usuário qual f'(x) foi usada.
+    Fluxo:
+        texto -> sympify (vira expressão simbólica)
+              -> confere que há exatamente UMA variável (x, t, ...)
+              -> diff (derivada automática, usada pelo Newton)
+              -> lambdify com "math" (vira função Python rápida)
 
-    Se o texto for inválido, lançar ValueError com mensagem amigável.
+    Devolve (f, df, texto da derivada). O texto da derivada é mostrado ao
+    usuário para ele conferir qual f'(x) foi usada.
+    Lança ValueError com mensagem amigável se o texto for inválido.
     """
     texto = texto.replace("^", "**")  # permite escrever potência com ^ (em Python é **)
 
@@ -154,7 +157,7 @@ def montar_caso_personalizado() -> dict:
         if input("  Usar este intervalo mesmo assim? (s/n): ").strip().lower() == "s":
             break
 
-    # 3. Chutes iniciais: Enter usa as pontas do intervalo (como o PDF sugere)
+    # 3. Chutes iniciais: Enter usa as pontas do intervalo (como o enunciado sugere)
     x0_newton = ler_float(f"x0 do Newton (Enter = {a}): ", padrao=a)
     x0_secante = ler_float(f"x0 da Secante (Enter = {a}): ", padrao=a)
     x1_secante = ler_float(f"x1 da Secante (Enter = {b}): ", padrao=b)

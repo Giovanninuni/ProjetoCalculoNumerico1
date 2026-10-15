@@ -8,10 +8,18 @@ Como executar:
     pip install -r requirements.txt
     python main.py
 
-PARTE 3 — Menu principal: escolhe o caso, lê eps e max_iter e chama a
-comparação. O trabalho de verdade está nos outros arquivos:
-    entrada.py     -> leitura dos dados (função, números, caso personalizado)
-    comparacao.py  -> roda os 4 métodos e mostra os resultados
+Fluxo do programa:
+    main.py (menu)
+      -> casos.py ou entrada.montar_caso_personalizado   (qual problema resolver)
+      -> entrada.ler_float / ler_int                     (eps e max_iter)
+      -> comparacao.executar_comparacao
+           -> entrada.ler_funcao                         (texto -> f e f')
+           -> metodos_intervalo.py e metodos_abertos.py  (cada um devolve um Resultado)
+           -> relatorio.py                               (tabela e janela com gráficos)
+           -> animacao.py                                (seletor de animações)
+      -> volta ao menu, até o usuário escolher 0 (sair)
+
+Este arquivo só tem o menu; o trabalho de verdade está nos outros.
 """
 
 from casos import CASOS, EPS_PADRAO, MAX_ITER_PADRAO
