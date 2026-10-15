@@ -76,11 +76,19 @@ def _valor_seguro(f: Callable[[float], float], x: float) -> float | None:
         return None
 
 
-def _desenhar_tabela(ax, resultados: list[Resultado]) -> list[str]:
-    """Desenha a tabela comparativa e devolve as notas (erros/avisos) para o rodapé."""
+def _desenhar_tabela(ax, resultados: list[Resultado],
+                     raiz_referencia: float | None = None) -> list[str]:
+    """
+    Desenha a tabela comparativa e devolve as notas (erros/avisos) para o rodapé.
+    Com raiz_referencia (casos do enunciado), ganha a coluna |raiz − referência|.
+    """
     ax.axis("off")  # a tabela não precisa de eixos
 
-    colunas = ["", "Método", "Raiz", "Iterações", "Tempo (ms)", "|f(raiz)|", "Situação"]
+    tem_referencia = raiz_referencia is not None
+    colunas = ["", "Método", "Raiz"]
+    if tem_referencia:
+        colunas.append("|raiz − ref.|")
+    colunas += ["Iterações", "Tempo (ms)", "|f(raiz)|", "Situação"]
     linhas = []
     notas = []
 
@@ -96,11 +104,19 @@ def _desenhar_tabela(ax, resultados: list[Resultado]) -> list[str]:
 
         raiz = f"{r.raiz:.10f}" if r.raiz is not None else "—"
         residuo = f"{r.residuo:.2e}" if r.residuo is not None else "—"
-        linhas.append(["", r.metodo, raiz, str(r.iteracoes),
-                       f"{r.tempo_ms:.4f}", residuo, situacao])
+        linha = ["", r.metodo, raiz]
+        if tem_referencia:
+            # Distância até a raiz de referência: o erro de verdade do método
+            linha.append(f"{abs(r.raiz - raiz_referencia):.2e}" if r.raiz is not None else "—")
+        linha += [str(r.iteracoes), f"{r.tempo_ms:.4f}", residuo, situacao]
+        linhas.append(linha)
 
+    if tem_referencia:
+        larguras = [0.02, 0.15, 0.15, 0.12, 0.09, 0.11, 0.11, 0.13]
+    else:
+        larguras = [0.02, 0.17, 0.17, 0.10, 0.12, 0.12, 0.14]
     tabela = ax.table(cellText=linhas, colLabels=colunas, loc="center", cellLoc="center",
-                      colWidths=[0.02, 0.17, 0.17, 0.10, 0.12, 0.12, 0.14])
+                      colWidths=larguras)
     tabela.auto_set_font_size(False)
     tabela.set_fontsize(10)
     tabela.scale(1, 1.6)  # linhas um pouco mais altas
@@ -209,7 +225,7 @@ def _desenhar_convergencia(ax, f: Callable[[float], float],
 
 def criar_figura(f: Callable[[float], float], a: float, b: float,
                  resultados: list[Resultado], titulo: str, subtitulo: str,
-                 eps: float, nome_var: str = "x"):
+                 eps: float, nome_var: str = "x", raiz_referencia: float | None = None):
     """Monta a figura completa: tabela em cima, dois gráficos embaixo."""
     fig = plt.figure(figsize=(13, 8.5), facecolor=COR_FUNDO)
     grade = fig.add_gridspec(2, 2, height_ratios=[1, 1.6], hspace=0.35, wspace=0.25,
@@ -219,7 +235,9 @@ def criar_figura(f: Callable[[float], float], a: float, b: float,
     fig.text(0.06, 0.915, subtitulo, fontsize=10, color=COR_TEXTO_SECUNDARIO)
 
     ax_tabela = fig.add_subplot(grade[0, :])  # linha de cima, ocupando as 2 colunas
-    notas = _desenhar_tabela(ax_tabela, resultados)
+    notas = _desenhar_tabela(ax_tabela, resultados, raiz_referencia)
+    if raiz_referencia is not None:
+        notas.insert(0, f"Raiz de referência: {raiz_referencia:.10f}")
     if notas:
         ax_tabela.text(0, -0.05, "\n".join(notas), transform=ax_tabela.transAxes,
                        fontsize=9, color=COR_TEXTO_SECUNDARIO, va="top")
@@ -239,9 +257,11 @@ def criar_figura(f: Callable[[float], float], a: float, b: float,
 
 def mostrar_janela(f: Callable[[float], float], a: float, b: float,
                    resultados: list[Resultado], titulo: str, subtitulo: str,
-                   eps: float, nome_var: str = "x") -> None:
+                   eps: float, nome_var: str = "x",
+                   raiz_referencia: float | None = None) -> None:
     """Abre a janela e espera o usuário fechá-la para voltar ao menu."""
-    fig = criar_figura(f, a, b, resultados, titulo, subtitulo, eps, nome_var)
+    fig = criar_figura(f, a, b, resultados, titulo, subtitulo, eps, nome_var,
+                       raiz_referencia)
     fig.canvas.manager.set_window_title("Simulador de Zeros — Resultados")
     plt.show()  # bloqueia até a janela ser fechada
     plt.close(fig)

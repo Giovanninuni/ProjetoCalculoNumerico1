@@ -65,7 +65,8 @@ def executar_comparacao(caso: dict, eps: float, max_iter: int) -> None:
         print("Feche a janela para voltar ao menu...")
         subtitulo = (f"f(x) = {caso['funcao']}   ·   [a, b] = [{a}, {b}]   ·   "
                      f"ε = {eps:g}   ·   máx. {max_iter} iterações")
-        mostrar_janela(f, a, b, resultados, caso["nome"], subtitulo, eps)
+        mostrar_janela(f, a, b, resultados, caso["nome"], subtitulo, eps,
+                       raiz_referencia=caso.get("raiz_referencia"))
 
     # Animação das iterações: seletor com um quadrado por método (Enter = não)
     resposta = input("Ver a animação das iterações de cada método? (s/N): ").strip().lower()
