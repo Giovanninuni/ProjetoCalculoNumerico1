@@ -561,6 +561,20 @@ def _video_pronto(caso: dict, metodo: str, eps: float, max_iter: int) -> str | N
     return caminho if os.path.exists(caminho) else None
 
 
+def _motivo_sem_video(caso: dict, metodo: str, eps: float, max_iter: int) -> str:
+    """Explica por que não há vídeo pronto (para mostrar no terminal)."""
+    prefixo = _prefixo(caso)
+    if prefixo is None:
+        return "função digitada não tem vídeo pronto"
+    if eps != EPS_PADRAO or max_iter != MAX_ITER_PADRAO:
+        return (f"os vídeos usam eps = {EPS_PADRAO:g} e {MAX_ITER_PADRAO} iterações; "
+                "com outros valores as iterações mudam")
+    numero = next(i for i, pronto in enumerate(CASOS, start=1)
+                  if pronto["funcao"] == caso["funcao"])
+    return (f"arquivo {prefixo}_{_nome_arquivo(metodo)}.mp4 não encontrado em docs/animacoes/ "
+            f"(gere com: python animacao.py {numero} --salvar)")
+
+
 def _abrir_video(caminho: str) -> None:
     """Abre o vídeo no player padrão do sistema (roda liso, a 30 fps)."""
     if sys.platform == "win32":
@@ -637,7 +651,8 @@ def mostrar_animacoes(f, resultados: list[Resultado], caso: dict, eps: float,
             print(f"  Abrindo vídeo: {os.path.basename(video)}")
             _abrir_video(video)
         else:
-            print(f"  Animação ao vivo: {r.metodo}")
+            print(f"  Animação ao vivo: {r.metodo} — "
+                  f"{_motivo_sem_video(caso, r.metodo, eps, max_iter)}")
             fig_anim, animacao = criar_animacao(f, r, caso, eps, nome_var, escala,
                                                 tempo_real=True)
             fig_anim.canvas.manager.set_window_title(f"Iterações — {r.metodo}")
